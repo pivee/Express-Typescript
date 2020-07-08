@@ -26,7 +26,7 @@ class App {
 
     controllers.forEach(controller => {
 
-      this.app.use("/", controller.router);
+      this.app.use(`/`, controller.router);
 
     });
 

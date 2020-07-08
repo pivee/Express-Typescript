@@ -1,16 +1,17 @@
 import * as express from "express";
-import Post from "./post.interface";
+import Controller from "../../interfaces/controller.interface";
+import Post from "../../interfaces/post.interface";
 
-class PostController {
+class PostController implements Controller {
 
-  public path = "/post";
+  public path = `/post`;
   public router = express.Router();
 
   private postList: Post[] = [
     {
-      author: "Pivithuru",
-      content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eius corrupti. Libero quisquam vero temporibus eveniet ut consequatur, impedit optio delectus enim inventore vel, laborum aperiam neque quos non ad!",
-      title: "Lorem Ipsum",
+      author: `Pivithuru`,
+      content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eius corrupti. Libero quisquam vero temporibus eveniet ut consequatur, impedit optio delectus enim inventore vel, laborum aperiam neque quos non ad!`,
+      title: `Lorem Ipsum`,
     },
   ];
 

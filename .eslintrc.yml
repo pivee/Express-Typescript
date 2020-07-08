@@ -17,13 +17,10 @@ rules:
     - 2
   quotes:
     - error
-    - double
+    - backtick
   semi:
     - error
     - always
-  max-len:
-    - warn
-    - 100
   padded-blocks:
     - error
     - always
