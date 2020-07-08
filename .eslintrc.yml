@@ -1,0 +1,71 @@
+env:
+  browser: true
+  es2020: true
+extends:
+  - "eslint:recommended"
+  - "plugin:@typescript-eslint/recommended"
+parser: "@typescript-eslint/parser"
+parserOptions:
+  ecmaVersion: 11
+  sourceType: module
+plugins:
+  - "@typescript-eslint"
+rules:
+  # Style-related rules -------------------------------------------------------
+  indent:
+    - error
+    - 2
+  quotes:
+    - error
+    - double
+  semi:
+    - error
+    - always
+  max-len:
+    - warn
+    - 100
+  padded-blocks:
+    - error
+    - always
+  linebreak-style:
+    - error
+    - unix
+  no-multiple-empty-lines:
+    - error
+    - max: 1
+  no-trailing-spaces:
+    - error
+  array-bracket-newline:
+    - error
+    - always
+  array-bracket-spacing:
+    - error
+    - always
+  array-element-newline:
+    - error
+    - always
+  object-curly-newline:
+    - error
+    - always
+  object-curly-spacing:
+    - error
+    - always
+  object-property-newline:
+    - error
+  comma-spacing:
+    - error
+  comma-dangle:
+    - error
+    - arrays: always
+      objects: always
+      imports: never
+      exports: never
+      functions: never
+  eol-last:
+    - error
+    - always
+  # Code-related rules --------------------------------------------------------
+  prefer-const:
+    - error
+  prefer-template:
+    - error
