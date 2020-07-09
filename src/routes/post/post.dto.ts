@@ -8,9 +8,9 @@ export class CreatePostDTO {
   public author: string;
 
   @IsString()
-  public content: string;
+  public title: string;
 
   @IsString()
-  public title: string;
+  public content: string;
 
 }

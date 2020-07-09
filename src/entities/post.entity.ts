@@ -5,11 +5,13 @@ import {
 } from "typeorm";
 
 @Entity()
-
-class Post {
+export default class Post {
 
   @PrimaryGeneratedColumn()
   public id?: number;
+
+  @Column()
+  public author: string;
 
   @Column()
   public title: string;
@@ -18,5 +20,3 @@ class Post {
   public content: string;
 
 }
-
-export default Post;
