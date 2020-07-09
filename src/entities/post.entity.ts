@@ -5,7 +5,7 @@ import {
 } from "typeorm";
 
 @Entity()
-export default class Post {
+class Post {
 
   @PrimaryGeneratedColumn()
   public id?: number;
@@ -20,3 +20,5 @@ export default class Post {
   public content: string;
 
 }
+
+export default Post;
