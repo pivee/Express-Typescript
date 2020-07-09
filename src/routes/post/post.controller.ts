@@ -2,6 +2,24 @@ import * as express from "express";
 import Controller from "../../interfaces/controller.interface";
 import Post from "../../interfaces/post.interface";
 
+//------------------------------------------------
+// #region ----------------------------------- //. 🔻 ⚙ Middlewares
+//------------------------------------------------
+import validationMiddleware from "../../middlewares/validation.middleware";
+//------------------------------------------------
+// #endregion ------------------------------------ 🔺 ⚙ Middlewares
+//------------------------------------------------
+
+//------------------------------------------------
+// #region ----------------------------------- //. 🔻 🚧 Data Transfer Objects
+//------------------------------------------------
+import {
+  CreatePostDTO
+} from "./post.dto";
+//------------------------------------------------
+// #endregion ------------------------------------ 🔺 🚧 Data Transfer Objects
+//------------------------------------------------
+
 class PostController implements Controller {
 
   public path = `/post`;
@@ -23,8 +41,15 @@ class PostController implements Controller {
 
   public intializeRoutes(): void {
 
-    this.router.get(`${this.path}/list`, this.getAllPosts);
-    this.router.post(`${this.path}/create`, this.createAPost);
+    this.router.get(
+      `${this.path}/list`,
+      this.getAllPosts
+    );
+    this.router.post(
+      `${this.path}/create`,
+      validationMiddleware(CreatePostDTO),
+      this.createAPost
+    );
 
   }
 
