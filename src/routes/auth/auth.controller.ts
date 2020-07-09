@@ -59,7 +59,7 @@ class AuthController implements Controller {
      */
     this.router.post(
       `${this.path}/login`,
-      validationMiddleware(RegisterDTO),
+      validationMiddleware(LogInDTO),
       this.logInUser
     );
 
@@ -89,6 +89,8 @@ class AuthController implements Controller {
         ...userData,
         password: hashedPassword,
       });
+
+      await this.repo.save(user);
 
       delete user.password;
 

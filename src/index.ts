@@ -13,7 +13,8 @@ import validateEnvironment from "./tools/validateEnvironment";
 //------------------------------------------------
 // #region ----------------------------------- //. 🔻 🎮 Controllers
 //------------------------------------------------
-import PostController from "./routes/Post/post.controller";
+import PostController from "./routes/post/post.controller";
+import AuthController from "./routes/auth/auth.controller";
 //------------------------------------------------
 // #endregion ------------------------------------ 🔺 🎮 Controllers
 //------------------------------------------------
@@ -37,6 +38,7 @@ validateEnvironment();
   const app = new App(
     [
       new PostController(),
+      new AuthController(),
     ],
     parseInt(process.env.PORT)
   );
