@@ -4,7 +4,9 @@ import * as bodyParser from "body-parser";
 //------------------------------------------------
 // #region ----------------------------------- //. 🔻 ⚙ Middlewares
 //------------------------------------------------
-import errorMiddleware from "./middlewares/error.middleware";
+import errorMiddleware, {
+  pathNotFoundMiddleware
+} from "./middlewares/error.middleware";
 //------------------------------------------------
 // #endregion ------------------------------------ 🔺 ⚙ Middlewares
 //------------------------------------------------
@@ -33,6 +35,7 @@ class App {
 
   private initializeErrorHandlers() {
 
+    this.app.use(pathNotFoundMiddleware);
     this.app.use(errorMiddleware);
 
   }
