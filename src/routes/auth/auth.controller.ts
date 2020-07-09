@@ -1,11 +1,16 @@
 import * as express from "express";
 import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 
 import {
   getRepository
 } from "typeorm";
 
 import Controller from "../../interfaces/controller.interface";
+import {
+  IToken,
+  ITokenData
+} from "../../interfaces/token.interface";
 
 import User from "../../entities/user.entity";
 
@@ -30,6 +35,7 @@ import {
 
 import UserWithThatEmailAlreadyExistsException from "./UserWithThatEmailAlreadyExistsException";
 import WrongCredentialsException from "./WrongCredentialsException";
+import IUser from "interfaces/user.interface";
 
 class AuthController implements Controller {
 
@@ -94,6 +100,15 @@ class AuthController implements Controller {
 
       delete user.password;
 
+      const token = this.createToken(user);
+
+      response.setHeader(
+        `Set-Cookie`,
+        [
+          this.createCookie(token),
+        ]
+      );
+
       response.send(user);
 
     }
@@ -120,6 +135,15 @@ class AuthController implements Controller {
 
         delete user.password;
 
+        const token = this.createToken(user);
+
+        response.setHeader(
+          `Set-Cookie`,
+          [
+            this.createCookie(token),
+          ]
+        );
+
         response.send(user);
 
       } else {
@@ -133,6 +157,31 @@ class AuthController implements Controller {
       next(new WrongCredentialsException());
 
     }
+
+  }
+
+  private createToken(user: IUser): IToken {
+
+    const expiresIn = 60 * 60;
+
+    const secret = process.env.JWT_SECRET;
+
+    const tokenData: ITokenData = {
+      id: user.id,
+    };
+
+    return {
+      expiresIn,
+      token: jwt.sign(tokenData, secret, {
+        expiresIn,
+      }),
+    };
+
+  }
+
+  private createCookie(token: IToken) {
+
+    return `Authorization:${token.token}; HttpOnly; Max-Age=${token.expiresIn}`;
 
   }
 
