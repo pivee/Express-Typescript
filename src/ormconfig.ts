@@ -6,6 +6,7 @@ import {
 // #region ----------------------------------- //. 🔻 📦 Entities
 //------------------------------------------------
 import Post from "./entities/post.entity";
+import User from "./entities/user.entity";
 //------------------------------------------------
 // #endregion ------------------------------------ 🔺 📦 Entities
 //------------------------------------------------
@@ -19,6 +20,7 @@ const config: ConnectionOptions = {
   database: process.env.POSTGRES_DB,
   entities: [
     Post,
+    User,
   ],
   synchronize: true,
 };
