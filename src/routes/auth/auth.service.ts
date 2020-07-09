@@ -9,6 +9,7 @@ import {
   IToken,
   ITokenData
 } from "../../interfaces/token.interface";
+import IUser from "../../interfaces/user.interface";
 
 import User from "../../entities/user.entity";
 
@@ -16,7 +17,8 @@ import User from "../../entities/user.entity";
 // #region ----------------------------------- //. 🔻 🚧 Data Transfer Objects
 //------------------------------------------------
 import {
-  RegisterDTO
+  RegisterDTO,
+  LogInDTO
 } from "./auth.dto";
 //------------------------------------------------
 // #endregion ------------------------------------ 🔺 🚧 Data Transfer Objects
@@ -63,6 +65,55 @@ class AuthService {
 
   }
 
+  public async logIn(
+    logInData: LogInDTO
+  ) {
+
+    const user = await this.repo.findOne({
+      email: logInData.email,
+    });
+
+    if (user) {
+
+      const isPasswordOK = await bcrypt.compare(logInData.password, user.password);
+
+      if (isPasswordOK) {
+
+        delete user.password;
+
+        const token = this.createToken(user);
+
+        const cookie = this.createCookie(token);
+
+        return {
+          cookie,
+          user,
+        };
+
+      } else {
+
+        throw new WrongCredentialsException();
+
+      }
+
+    } else {
+
+      throw new WrongCredentialsException();
+
+    }
+
+  }
+
+  public logOut() {
+
+    const cookie = this.deleteCookie();
+
+    return {
+      cookie,
+    };
+
+  }
+
   public createToken(user: IUser): IToken {
 
     const expiresIn = 60 * 60;
@@ -85,6 +136,12 @@ class AuthService {
   private createCookie(token: IToken) {
 
     return `Authorization=${token.token}; HttpOnly; Max-Age=${token.expiresIn}`;
+
+  }
+
+  private deleteCookie() {
+
+    return `Authorization=; HttpOnly; Max-Age=0`;
 
   }
 

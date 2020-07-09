@@ -76,17 +76,17 @@ class AuthController implements IController {
 
       const {
         cookie,
-        user
-      } = await this.authService.register(userData)
+        user,
+      } = await this.authService.register(userData);
 
       response.setHeader(
         `Set-Cookie`,
         [
-          cookie
+          cookie,
         ]
       );
 
-      response.send(user)
+      response.send(user);
 
     } catch (error) {
 
@@ -96,93 +96,58 @@ class AuthController implements IController {
 
   }
 
-}
-
   private logInUser = async (
-  request: express.Request,
-  response: express.Response,
-  next: express.NextFunction
-) => {
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
 
-  const logInData: LogInDTO = request.body;
+    const logInData: RegisterDTO = request.body;
 
-  const user = await this.repo.findOne({
-    email: logInData.email,
-  });
+    try {
 
-  if (user) {
-
-    const isPasswordOK = await bcrypt.compare(logInData.password, user.password);
-
-    if (isPasswordOK) {
-
-      delete user.password;
-
-      const token = this.createToken(user);
+      const {
+        cookie,
+        user,
+      } = await this.authService.logIn(logInData);
 
       response.setHeader(
         `Set-Cookie`,
         [
-          this.createCookie(token),
+          cookie,
         ]
       );
 
       response.send(user);
 
-    } else {
+    } catch (error) {
 
-      next(new WrongCredentialsException());
+      next(error);
 
     }
 
-  } else {
-
-    next(new WrongCredentialsException());
-
   }
 
-}
+  private logOutUser = (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
 
-  private logOutUser = async (
-  request: express.Request,
-  response: express.Response,
-  next: express.NextFunction
-) => {
+    const {
+      cookie,
+    } = this.authService.logOut();
 
-  response.setHeader(
-    `Set-Cookie`,
-    [
-      `Authorization=;Max-Age=0`,
-    ]
-  );
+    response.setHeader(
+      `Set-Cookie`,
+      [
+        cookie,
+      ]
+    );
 
-  response.sendStatus(200);
+    response.sendStatus(200);
 
-}
-  private createToken(user: IUser): IToken {
-
-  const expiresIn = 60 * 60;
-
-  const secret = process.env.JWT_SECRET;
-
-  const tokenData: ITokenData = {
-    id: user.id,
-  };
-
-  return {
-    expiresIn,
-    token: jwt.sign(tokenData, secret, {
-      expiresIn,
-    }),
-  };
-
-}
-
-  private createCookie(token: IToken) {
-
-  return `Authorization=${token.token}; HttpOnly; Max-Age=${token.expiresIn}`;
-
-}
+  }
 
 }
 
