@@ -4,7 +4,7 @@ import {
   getRepository
 } from "typeorm";
 
-import Controller from "../../interfaces/controller.interface";
+import IController from "../../interfaces/controller.interface";
 import IRequestWithUser from "../../interfaces/requestWithUser.interface";
 
 import Post from "../../entities/post.entity";
@@ -22,19 +22,19 @@ import authMiddleware from "../../middlewares/auth.middleware";
 // #region ----------------------------------- //. 🔻 🚧 Data Transfer Objects
 //------------------------------------------------
 import {
-  CreatePostDTO
+  PostDTO
 } from "./post.dto";
 //------------------------------------------------
 // #endregion ------------------------------------ 🔺 🚧 Data Transfer Objects
 //------------------------------------------------
 
-import PostNotFoundException from "./PostNotFoundException";
+import PostNotFoundException from "../../libraries/exceptions/PostNotFoundException";
 
-class PostController implements Controller {
+class PostController implements IController {
 
   public path = `/post`;
   public router = express.Router();
-  private postRepository = getRepository(Post);
+  private repo = getRepository(Post);
 
   constructor() {
 
@@ -50,7 +50,7 @@ class PostController implements Controller {
     this.router.post(
       `${this.path}`,
       authMiddleware,
-      validationMiddleware(CreatePostDTO),
+      validationMiddleware(PostDTO),
       this.createPost
     );
     /*
@@ -72,7 +72,7 @@ class PostController implements Controller {
      */
     this.router.patch(
       `${this.path}/:id`,
-      validationMiddleware(CreatePostDTO, true),
+      validationMiddleware(PostDTO, true),
       this.modifyPost
     );
     /**
@@ -90,16 +90,16 @@ class PostController implements Controller {
     response: express.Response
   ) => {
 
-    const postData: CreatePostDTO = request.body;
+    const postData: PostDTO = request.body;
 
     const newPost = {
       ...postData,
       author_id: request.user.id,
     };
 
-    const createdPost = this.postRepository.create(newPost);
+    const createdPost = this.repo.create(newPost);
 
-    await this.postRepository.save(createdPost);
+    await this.repo.save(createdPost);
 
     response.send(createdPost);
 
@@ -110,7 +110,7 @@ class PostController implements Controller {
     response: express.Response
   ) => {
 
-    const postList = await this.postRepository.find();
+    const postList = await this.repo.find();
 
     response.send(postList);
 
@@ -124,7 +124,7 @@ class PostController implements Controller {
 
     const id = request.params.id;
 
-    const post = await this.postRepository.findOne(id);
+    const post = await this.repo.findOne(id);
 
     if (post) {
 
@@ -148,12 +148,12 @@ class PostController implements Controller {
 
     const postData = request.body;
 
-    await this.postRepository.update(
+    await this.repo.update(
       id,
       postData
     );
 
-    const updatedPost = await this.postRepository.findOne(id);
+    const updatedPost = await this.repo.findOne(id);
 
     if (updatedPost) {
 
@@ -175,7 +175,7 @@ class PostController implements Controller {
 
     const id = request.params.id;
 
-    const deleteResponse = await this.postRepository.delete(id);
+    const deleteResponse = await this.repo.delete(id);
 
     if (deleteResponse.raw[1]) {
 

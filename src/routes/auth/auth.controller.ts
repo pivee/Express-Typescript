@@ -6,7 +6,7 @@ import {
   getRepository
 } from "typeorm";
 
-import Controller from "../../interfaces/controller.interface";
+import IController from "../../interfaces/controller.interface";
 import {
   IToken,
   ITokenData
@@ -33,11 +33,11 @@ import {
 // #endregion ------------------------------------ 🔺 🚧 Data Transfer Objects
 //------------------------------------------------
 
-import UserWithThatEmailAlreadyExistsException from "./UserWithThatEmailAlreadyExistsException";
-import WrongCredentialsException from "./WrongCredentialsException";
+import UserWithThatEmailAlreadyExistsException from "../../libraries/exceptions/UserWithThatEmailAlreadyExistsException";
+import WrongCredentialsException from "../../libraries/exceptions/WrongCredentialsException";
 import IUser from "interfaces/user.interface";
 
-class AuthController implements Controller {
+class AuthController implements IController {
 
   public path = `/auth`;
   public router = express.Router();

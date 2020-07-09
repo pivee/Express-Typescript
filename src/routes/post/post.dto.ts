@@ -2,7 +2,7 @@ import {
   IsString
 } from 'class-validator';
 
-export class CreatePostDTO {
+export class PostDTO {
 
   @IsString()
   public author: string;

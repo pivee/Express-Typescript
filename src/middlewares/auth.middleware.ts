@@ -16,8 +16,8 @@ import IRequestWithUser from "../interfaces/requestWithUser.interface";
 
 import User from "../entities/user.entity";
 
-import WrongAuthenticationTokenException from "../routes/auth/WrongAuthenticationTokenException";
-import AuthenticationTokenMissingException from "../routes/auth/AuthenticationTokenMissingException";
+import WrongAuthenticationTokenException from "../libraries/exceptions/WrongAuthenticationTokenException";
+import AuthenticationTokenMissingException from "../libraries/exceptions/AuthenticationTokenMissingException";
 
 async function authMiddleware(
   request: IRequestWithUser,

@@ -1,4 +1,4 @@
-import HttpException from '../../libraries/exceptions/HttpException';
+import HttpException from './HttpException';
 
 class AuthenticationTokenMissingException extends HttpException {
 
