@@ -5,8 +5,8 @@ import {
 } from "typeorm";
 
 import Controller from "../../interfaces/controller.interface";
-import IPost from "../../interfaces/post.interface";
-import Post from "./post.entity";
+
+import Post from "../../entities/post.entity";
 
 //------------------------------------------------
 // #region ----------------------------------- //. 🔻 ⚙ Middlewares
@@ -26,19 +26,13 @@ import {
 // #endregion ------------------------------------ 🔺 🚧 Data Transfer Objects
 //------------------------------------------------
 
+import PostNotFoundException from "./PostNotFoundException";
+
 class PostController implements Controller {
 
   public path = `/post`;
   public router = express.Router();
   private postRepository = getRepository(Post);
-
-  private postList: IPost[] = [
-    {
-      author: `Pivithuru`,
-      content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, eius corrupti. Libero quisquam vero temporibus eveniet ut consequatur, impedit optio delectus enim inventore vel, laborum aperiam neque quos non ad!`,
-      title: `Lorem Ipsum`,
-    },
-  ];
 
   constructor() {
 
@@ -61,7 +55,7 @@ class PostController implements Controller {
      */
     this.router.get(
       `${this.path}/list`,
-      this.getAllPosts
+      this.getPostList
     );
     /*
      * Get One by ID
@@ -88,23 +82,102 @@ class PostController implements Controller {
 
   }
 
-  createPost = (
+  private createPost = async (
     request: express.Request,
     response: express.Response
-  ): void => {
+  ) => {
 
-    const post: IPost = request.body;
-    this.postList.push(post);
-    response.send(post);
+    const postData: CreatePostDTO = request.body;
+
+    const newPost = this.postRepository.create(postData);
+
+    await this.postRepository.save(newPost);
+
+    response.send(newPost);
 
   }
 
-  getAllPosts = (
+  private getPostList = async (
     request: express.Request,
     response: express.Response
-  ): void => {
+  ) => {
 
-    response.send(this.postList);
+    const postList = await this.postRepository.find();
+
+    response.send(postList);
+
+  }
+
+  private getPostById = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
+
+    const id = request.params.id;
+
+    const post = await this.postRepository.findOne(id);
+
+    if (post) {
+
+      response.send(post);
+
+    } else {
+
+      next(new PostNotFoundException(id));
+
+    }
+
+  }
+
+  private modifyPost = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
+
+    const id = request.params.id;
+
+    const postData = request.body;
+
+    await this.postRepository.update(
+      id,
+      postData
+    );
+
+    const updatedPost = await this.postRepository.findOne(id);
+
+    if (updatedPost) {
+
+      response.send(updatedPost);
+
+    } else {
+
+      next(new PostNotFoundException(id));
+
+    }
+
+  }
+
+  private deletePost = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
+
+    const id = request.params.id;
+
+    const deleteResponse = await this.postRepository.delete(id);
+
+    if (deleteResponse.raw[1]) {
+
+      response.sendStatus(200);
+
+    } else {
+
+      next(new PostNotFoundException(id));
+
+    }
 
   }
 
