@@ -11,7 +11,7 @@ class Post {
   public id?: number;
 
   @Column()
-  public author: string;
+  public author_id: string;
 
   @Column()
   public title: string;

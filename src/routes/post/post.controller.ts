@@ -5,6 +5,7 @@ import {
 } from "typeorm";
 
 import Controller from "../../interfaces/controller.interface";
+import IRequestWithUser from "../../interfaces/requestWithUser.interface";
 
 import Post from "../../entities/post.entity";
 
@@ -12,6 +13,7 @@ import Post from "../../entities/post.entity";
 // #region ----------------------------------- //. 🔻 ⚙ Middlewares
 //------------------------------------------------
 import validationMiddleware from "../../middlewares/validation.middleware";
+import authMiddleware from "../../middlewares/auth.middleware";
 //------------------------------------------------
 // #endregion ------------------------------------ 🔺 ⚙ Middlewares
 //------------------------------------------------
@@ -47,6 +49,7 @@ class PostController implements Controller {
      */
     this.router.post(
       `${this.path}`,
+      authMiddleware,
       validationMiddleware(CreatePostDTO),
       this.createPost
     );
@@ -83,17 +86,22 @@ class PostController implements Controller {
   }
 
   private createPost = async (
-    request: express.Request,
+    request: IRequestWithUser,
     response: express.Response
   ) => {
 
     const postData: CreatePostDTO = request.body;
 
-    const newPost = this.postRepository.create(postData);
+    const newPost = {
+      ...postData,
+      author_id: request.user.id,
+    };
 
-    await this.postRepository.save(newPost);
+    const createdPost = this.postRepository.create(newPost);
 
-    response.send(newPost);
+    await this.postRepository.save(createdPost);
+
+    response.send(createdPost);
 
   }
 

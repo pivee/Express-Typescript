@@ -61,12 +61,19 @@ class AuthController implements Controller {
       this.registerUser
     );
     /*
-     * Login
+     * Log in
      */
     this.router.post(
       `${this.path}/login`,
       validationMiddleware(LogInDTO),
       this.logInUser
+    );
+    /*
+     * Log out
+     */
+    this.router.get(
+      `${this.path}/logout`,
+      this.logOutUser
     );
 
   }
@@ -160,6 +167,22 @@ class AuthController implements Controller {
 
   }
 
+  private logOutUser = async (
+    request: express.Request,
+    response: express.Response,
+    next: express.NextFunction
+  ) => {
+
+    response.setHeader(
+      `Set-Cookie`,
+      [
+        `Authorization=;Max-Age=0`,
+      ]
+    );
+
+    response.sendStatus(200);
+
+  }
   private createToken(user: IUser): IToken {
 
     const expiresIn = 60 * 60;
@@ -181,7 +204,7 @@ class AuthController implements Controller {
 
   private createCookie(token: IToken) {
 
-    return `Authorization:${token.token}; HttpOnly; Max-Age=${token.expiresIn}`;
+    return `Authorization=${token.token}; HttpOnly; Max-Age=${token.expiresIn}`;
 
   }
 
