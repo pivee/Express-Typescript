@@ -1,6 +1,6 @@
 import {
   ConnectionOptions
-} from 'typeorm';
+} from "typeorm";
 
 const config: ConnectionOptions = {
   type: `postgres`,

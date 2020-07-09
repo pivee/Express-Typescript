@@ -4,6 +4,8 @@
     "target": "es2017",
     "outDir": "./dist",
     "baseUrl": "./src",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
   "include": [
