@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+
+  # Postgres Container --------------------------------------------------------
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - persistent-postgres:/data/postgres
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+      POSTGRES_DB: ts_express
+    networks:
+      - postgres
+ 
+  # pgAdmin Container ---------------------------------------------------------
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "8080:80"
+    volumes:
+      - persistent-pgadmin:/root/.pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pguser@pg.com
+      PGADMIN_DEFAULT_PASSWORD: pgpass
+    networks:
+      - postgres
+
+volumes:
+  persistent-postgres:
+    external: true
+  persistent-pgadmin:
+    external: true
+
+networks:
+  postgres:
+    driver: bridge
