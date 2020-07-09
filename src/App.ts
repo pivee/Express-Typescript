@@ -1,6 +1,14 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 
+//------------------------------------------------
+// #region ----------------------------------- //. 🔻 ⚙ Middlewares
+//------------------------------------------------
+import errorMiddleware from "./middlewares/error.middleware";
+//------------------------------------------------
+// #endregion ------------------------------------ 🔺 ⚙ Middlewares
+//------------------------------------------------
+
 class App {
 
   public app: express.Application;
@@ -13,12 +21,19 @@ class App {
 
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
+    this.initializeErrorHandlers();
 
   }
 
   private initializeMiddlewares() {
 
     this.app.use(bodyParser.json());
+
+  }
+
+  private initializeErrorHandlers() {
+
+    this.app.use(errorMiddleware);
 
   }
 
