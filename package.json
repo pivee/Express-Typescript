@@ -23,7 +23,10 @@
     "dotenv": "^8.2.0",
     "envalid": "^6.0.2",
     "express": "^4.17.1",
+    "pg": "^8.2.2",
+    "reflect-metadata": "^0.1.13",
     "ts-node": "^8.10.2",
+    "typeorm": "^0.2.25",
     "typescript": "^3.9.6"
   },
   "devDependencies": {
