@@ -1,9 +1,16 @@
 import "dotenv/config";
 
 import App from "./App";
-import PostController from "./routes/Post/post.controller";
 
 import validateEnvironment from "./tools/validateEnvironment";
+
+//------------------------------------------------
+// #region ----------------------------------- //. 🔻 🎮 Controllers
+//------------------------------------------------
+import PostController from "./routes/Post/post.controller";
+//------------------------------------------------
+// #endregion ------------------------------------ 🔺 🎮 Controllers
+//------------------------------------------------
 
 validateEnvironment();
 
