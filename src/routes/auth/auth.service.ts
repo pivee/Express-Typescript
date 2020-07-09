@@ -133,13 +133,13 @@ class AuthService {
 
   }
 
-  private createCookie(token: IToken) {
+  public createCookie(token: IToken) {
 
     return `Authorization=${token.token}; HttpOnly; Max-Age=${token.expiresIn}`;
 
   }
 
-  private deleteCookie() {
+  public deleteCookie() {
 
     return `Authorization=; HttpOnly; Max-Age=0`;
 
