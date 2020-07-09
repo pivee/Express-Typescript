@@ -39,8 +39,7 @@ validateEnvironment();
     [
       new PostController(),
       new AuthController(),
-    ],
-    parseInt(process.env.PORT)
+    ]
   );
 
   app.listen();

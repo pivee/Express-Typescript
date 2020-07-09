@@ -17,10 +17,9 @@ class App {
   public app: express.Application;
   public port: number;
 
-  constructor(controllers, port: number) {
+  constructor(controllers) {
 
     this.app = express();
-    this.port = port;
 
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
@@ -54,11 +53,17 @@ class App {
 
   public listen(): void {
 
-    this.app.listen(this.port, () => {
+    this.app.listen(process.env.PORT, () => {
 
-      console.log(`App is running on port ${this.port}`);
+      console.log(`App is running on port ${process.env.PORT}`);
 
     });
+
+  }
+
+  public getServer(): express.Application {
+
+    return this.app;
 
   }
 
